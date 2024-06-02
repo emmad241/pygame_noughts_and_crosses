@@ -41,6 +41,49 @@ def get_available_moves():
                 moves.append((row, col))
     return moves
 
+def is_board_full():
+    return all(all(cell != '' for cell in row) for row in board)
+
+def ai_turn():
+    best_move = None
+    best_eval = -math.inf
+    for move in get_available_moves():
+        row, col = move
+        board[row][col] = 'O'
+        eval = minimax(board, 0, False)
+        board[row][col] = ''
+        if eval > best_eval:
+            best_eval = eval
+            best_move = move
+    row, col = best_move
+    board[row][col] = 'O'
+
+def minimax(board, depth, maximizing_player):
+    if check_win('O'):
+        return 1
+    if check_win('X'):
+        return -1
+    if is_board_full():
+        return 0
+    if maximizing_player:
+        max_eval = -math.inf
+        for move in get_available_moves():
+            row, col = move
+            board[row][col] = 'O'
+            eval = minimax(board, depth + 1, False)
+            board[row][col] = ''
+            max_eval = max(max_eval, eval)
+        return max_eval
+    else:
+        min_eval = math.inf
+        for move in get_available_moves():
+            row, col = move
+            board[row][col] = 'X'
+            eval = minimax(board, depth + 1, True)
+            board[row][col] = ''
+            min_eval = min(min_eval, eval)
+        return min_eval
+
 running = True
 while running:
     for event in pygame.event.get():
