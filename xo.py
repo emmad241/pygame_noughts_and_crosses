@@ -83,6 +83,23 @@ def minimax(board, depth, maximizing_player):
             board[row][col] = ''
             min_eval = min(min_eval, eval)
         return min_eval
+    
+def show_winner_message(winner_message):
+    #loop to keep the window open
+    while True:
+        window.fill(WHITE)
+
+        font = pygame.font.Font(None, 50)
+        text = font.render(winner_message, True, GREEN)
+        text_rect = text.get_rect(center=(window_width // 2, window_height // 2))
+        window.blit(text, text_rect)
+
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                return
 
 running = True
 while running:
@@ -98,6 +115,25 @@ while running:
             if board[cell_y][cell_x] == '':
                 board[cell_y][cell_x] = current_player
                 current_player = 'O' if current_player == 'X' else 'X'
+
+    if check_win('X'):
+        winner_message = 'X wins!'
+        running = False
+        show_winner_message(winner_message)
+    elif check_win('O'):
+        winner_message = 'O wins!'
+        running = False
+        show_winner_message(winner_message)
+    elif is_board_full():
+        winner_message = 'It\'s a draw!'
+        running = False
+        show_winner_message(winner_message)
+    else:
+        winner_message = ''
+
+    if current_player == 'O':
+        ai_turn()
+        current_player = 'X'
 
     window.fill(WHITE)
     cell_width = window_width // 3
