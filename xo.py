@@ -20,6 +20,27 @@ board = [['', '', ''],
 
 current_player = 'X'
 
+def check_win(current_player):
+    for row in range(3):
+        if all(cell == current_player for cell in board[row]):
+            return True
+    for col in range(3):
+        if all(board[row][col] == current_player for row in range(3)):
+            return True
+    if all(board[i][i] == current_player for i in range(3)):
+        return True
+    if all(board[i][2 - i] == current_player for i in range(3)):
+        return True
+    return False
+
+def get_available_moves():
+    moves = []
+    for row in range(3):
+        for col in range(3):
+            if board[row][col] == '':
+                moves.append((row, col))
+    return moves
+
 running = True
 while running:
     for event in pygame.event.get():
